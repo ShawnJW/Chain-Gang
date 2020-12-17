@@ -7,7 +7,7 @@
 
 define( "DB_SERVER", "localhost" );
 define( "DB_USER", "root" );
-define( "DB_PASS", "Winston321" );
+define( "DB_PASS", "xxx" );
 define( "DB_NAME", "chain_gang" );
 
 ?>
