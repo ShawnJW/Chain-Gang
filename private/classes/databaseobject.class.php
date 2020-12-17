@@ -4,7 +4,7 @@ class DatabaseObject {
     
     static protected $database;
     static protected $table_name = "";
-    static protected $columns = [];
+    static protected $db_columns = [];
     public $errors = [];
 
     static public function set_database( $database ) {
@@ -12,7 +12,7 @@ class DatabaseObject {
 	}
 
 	static public function find_by_sql( $sql ) {
-		$result =  static::$database->query($sql);
+		$result =  self::$database->query($sql);
 		if( !$result ){
 			exit( "Database query failed." );
 		}
@@ -91,7 +91,7 @@ class DatabaseObject {
 			$attributes_pairs[] = "{$key}='{$value}'";
 		}
 
-		$sql = "UPDATE " . static::$table_name . " ";
+		$sql = "UPDATE " . static::$table_name . " SET ";
 		$sql .= join( ', ', $attributes_pairs );
 		$sql .= " WHERE id='" . self::$database->escape_string( $this->id ) . "' ";
 		$sql .= "LIMIT 1";
