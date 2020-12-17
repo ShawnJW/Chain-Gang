@@ -1,31 +1,29 @@
 <?php 
-// Create a Constant for Categories: road, mountain, hybrid, cruiser, city, BMX
-//  --- Constant for Genders: mens, womens, unisex
-//  Properties: brand, model, year, category, color, description
-// __construct() said properties
-// Weight in kilograms and pounds
-// Define property for $weight_kg
-// Function that returns weight_kg(), set_weight_kg()
-// Function that returns weight_lb(), set_weight_lb()
-// Store condition options [1 => 'Beat up', 2 => 'Decent', 3 => 'Good', 4 => 'Great', 5 => 'Like New']
-// Store the number as condition_id
-// condition() method takes id and returns assocc. string
-// Manual class loading or __autoload()
 
-class Bicycle {
+class Bicycle extends DatabaseObject {
+
+	static protected $table_name = 'bicycles';
+	static protected $db_columns = [ 'brand', 'model', 'year', 'category', 'color', 'gender', 'price', 'weight_kg', 'condition_id', 'description' ];
+
+	
+	public function name() {
+		return "{$this->brand} {$this->model} {$this->year}";
+	}
+
 
 	public const CATEGORIES = ['road', 'mountain', 'hybrid', 'cruiser', 'city', 'BMX'];
 
 	public const GENDERS = ['mens', 'womens', 'unisex'];
-	protected const CONDITION = [1 => 'Beat up', 2 => 'Decent', 3 => 'Good', 4 => 'Great', 5 => 'Like New'];
+	public const CONDITION_OPTIONS = [1 => 'Beat up', 2 => 'Decent', 3 => 'Good', 4 => 'Great', 5 => 'Like New'];
 
+	public $id;
 	public $brand;
 	public $model;
 	public $year;
 	public $category;
 	public $color;
 	public $description;
-	protected $weight_kg;
+	public $weight_kg;
 	public $condition_id;
 	public $price;
 
@@ -37,9 +35,9 @@ class Bicycle {
 		$this->color = $args['color'] ?? '';
 		$this->gender = $args['gender'] ?? '';
 		$this->description = $args['description'] ?? '';
-		$this->weight_kg = $args['weight_kg'] ?? '';
-		$this->condition_id = $args['condition_id'] ?? '';
-		$this->price = $args['price'] ?? '';
+		$this->weight_kg = $args['weight_kg'] ?? 0.0;
+		$this->condition_id = $args['condition_id'] ?? 3;
+		$this->price = $args['price'] ?? 0;
 	}
 	//Caution allows private/protected properties to be set, alt to above construct arguments
 	// For each value passed in, use each one as a key and a value, if the property exist on this instance then set that key equal to v, $k is a dynamic value, not a property
@@ -65,13 +63,24 @@ class Bicycle {
 		return $this->weight_kg = floatval($value) / 2.2046226218;
 	}
 
-	public function condition(){
-		if( $this->condition_id > 0) {
-		$condition_id = self::CONDITION[$this->condition_id];
-		return $condition_id;
-	}else{
-		return 'Unknown';
+	public function condition() {
+		if($this->condition_id > 0) {
+		  return self::CONDITION_OPTIONS[$this->condition_id];
+		} else {
+		  return "Unknown";
 		}
+	  }
+
+	  protected function validate() {
+		$this->errors = [];
+		if( is_blank( $this->brand ) ) {
+			$this->errors[] = "Brand cannot be blank.";
+		}
+	
+		if( is_blank( $this->model ) ) {
+				$this->errors[] = "Model cannot be blank.";
+			}
+		return $this->errors;
 	}
 }
 ?>
