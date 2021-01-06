@@ -42,8 +42,8 @@ class Session {
     private function check_stored_login() {
         if( isset( $_SESSION[ 'admin_id' ] ) ) {
             $this->admin_id = $_SESSION[ 'admin_id' ];
-            $this->admin_id = $_SESSION[ 'username' ];
-            $this->admin_id = $_SESSION[ 'last_login' ];
+            $this->username = $_SESSION[ 'username' ];
+            $this->last_login = $_SESSION[ 'last_login' ];
         }
     }
 }
