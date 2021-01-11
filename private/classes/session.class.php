@@ -6,6 +6,8 @@ class Session {
     public $username;
     private $last_login;
 
+    public const MAX_LOGIN_AGE = 60*60*24;
+
     public function __construct( ) {
         session_start();
         $this->check_stored_login();
@@ -25,7 +27,8 @@ class Session {
     }
 
     public function is_logged_in() {
-        return isset( $this->admin_id );
+        // return isset( $this->admin_id );
+        return isset( $this->admin_id ) && $this->last_login_is_recent();
     }
 
     public function logout() {
@@ -44,6 +47,17 @@ class Session {
             $this->admin_id = $_SESSION[ 'admin_id' ];
             $this->username = $_SESSION[ 'username' ];
             $this->last_login = $_SESSION[ 'last_login' ];
+        }
+    }
+
+
+    private function last_login_is_recent() {
+        if( !isset( $this->last_login ) ) {
+            return false;
+        }elseif( $this->last_login + self::MAX_LOGIN_AGE < time() ){
+            return false;
+        }else {
+            return true;
         }
     }
 }
